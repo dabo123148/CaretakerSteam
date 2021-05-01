@@ -19,7 +19,7 @@ The first time you start the bot, it will ask for 2 things:
 2. Your discord user id(this is a number not e.g. example#3049, it is something like 265119060331282241) -> this gives you access to certain commands to setup and manage the bot
 
 Once you have done this, you gonna need to add a server list:   
-Please inform yourself over the laws in your country, you might need to take care of certain data protection laws when processing and collecting data(especially gdpr)
+Please inform yourself over the laws in your country. You might need to take care of certain data protection laws when processing and collecting data(especially gdpr). There might also be other rules or regulations in place concerning the useage of the steamworks api or other laws that regulate the bot where you live.
 1. Option:  
 !addserverlist [url]  
 This url must be in the same format as http://arkdedicated.com/officialservers.ini .
@@ -31,6 +31,11 @@ This adds only 1 server
 Once the commands finished running you need to restart the bot one time, this causes it to load the servers
 
 Once this is done, your bot should be ready to go
+
+How does the bot get its data?  
+The bot uses 2 ways: 
+1. A2S(this is ues for e.g. !server)
+2. Steamworks: The bot communicates with the steamclient on your computer, which then communicates with the steamservers and then the bot reads the data from your steamclient -> uses your steamaccount
 
 Tip:
 If you want to play ark at the same time and have the bot running, you can change the app id to any other app id in your libary
