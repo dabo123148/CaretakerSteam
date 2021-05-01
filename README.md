@@ -23,4 +23,6 @@ This adds only 1 server
 Once the commands finished running you need to restart the bot one time, this causes it to load the servers
 
 Once this is done, your bot should be ready to go
- 
+
+Tip:
+If you want to play ark at the same time and have the bot running, you can change the app id to any other app id in your libary
