@@ -2,7 +2,8 @@
 SteamID module of the discord bot Caretaker by dabo1#5039 
 https://discord.gg/zas9CkW
 
-This is most of the code from caretaker for the steamid module. It has been mostly rewritten, so there are some changes and some missing commands.
+What is this?
+This is a discord bot, that allows you to monitor player joins and leaves on servers using steamworks. It is mostly meant for ARK: Survival Evolved, but might work for some other steam games aswell that use a similar server setup. 
 
 If you know how to code:
 If you know how to code, I strongly advise you to rewrite the class DataBase.cs . There is an example datastrucure, but since it uses the winodows file system it isn't the fastest and might cause other issues. Also there is in Constants.cs a way to implement a debugging dashboard.
