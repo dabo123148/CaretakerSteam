@@ -288,6 +288,10 @@ namespace Caretaker
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     SteamIDExportCommand(message, guildid, Content);
                     break;
+                case "!devhelp":
+                    Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
+                    DevHelpCommand(message, guildid, Content);
+                    break;
                 case "!markbot":
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     MarkBotCommand(message, guildid, Content);
@@ -471,8 +475,22 @@ namespace Caretaker
             helpmessage += "Exports all manually added ids, that match the filter. Can be importet by other bots```css\n!steamidexport [Tribename or all]```";
             helpmessage += "Imports all manually added ids```css\n!steamidimport (export file as attachment)```";
             helpmessage += "Activates/Deactivates leavemessages```css\n!toggleleavelog```";
+            if (message.Author.Id == AuthorUserID) helpmessage += "List of commands only you can execute(dev commands)```css\n!devhelp```";
             helpmessage += "Open Source Github implementation from: " + Constants.githuburl + "\n";
             helpmessage += "Support server: " + Constants.supportserver + "\n";
+            if (helpmessage.Length > 2000)
+            {
+                Compfort.Log("Help too long (" + helpmessage.Length + ")");
+                helpmessage = "Helpmessage too long, please contact the person maintaining the bot";
+            }
+            message.Channel.SendMessageAsync(helpmessage);
+        }
+        private void DevHelpCommand(SocketMessage message, ulong guildid, string Content)
+        {
+            string helpmessage = "";
+            helpmessage += "Adds a server```css\n!createserver [IP:Port]```";
+            helpmessage += "Adds a server list(must be format as http://arkdedicated.com/officialservers.ini) ```css\n!addserverlist [url]```";
+            helpmessage += "Adds a bot/makes an id invisible for the bot```!addbot [SteamID]```";
             if (helpmessage.Length > 2000)
             {
                 Compfort.Log("Help too long (" + helpmessage.Length + ")");
