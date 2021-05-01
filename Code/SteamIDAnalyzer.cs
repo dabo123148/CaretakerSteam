@@ -1185,9 +1185,20 @@ namespace Caretaker
                             Compfort.Log("Addr: " + ip + "  " + info.Name);
                             DataBase.CreateServer(info);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            Console.WriteLine(ex);
+                            //Sometimes servers respond without server steamid => this still adds them
+                            try
+                            {
+                                A2S_InfoResponse info = A2S.GetInfoWithoutSteamID(ip);
+                                //Implement here a filter if you only want to have certain servers(e.g. only pvp) -> the fewer servers the faster the server data gets updated
+                                Compfort.Log("Addr: " + ip + "  " + info.Name);
+                                DataBase.CreateServer(info);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
                         }
                     }
                 }

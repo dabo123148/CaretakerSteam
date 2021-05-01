@@ -1582,7 +1582,7 @@ namespace Caretaker
             }
             if (Content.Split(' ').Length == 2)
             {
-                message.Channel.SendMessageAsync("Command invalid. Use !markbot" + Content.Split(' ')[0] + " [SteamID]");
+                message.Channel.SendMessageAsync("Command invalid. Use !markbot" + " [SteamID]");
                 return;
             }
             if (!Compfort.IsSteamID(Content.Split(' ')[1]))
@@ -1638,11 +1638,21 @@ namespace Caretaker
                 DataBase.CreateServer(info);
                 message.Channel.SendMessageAsync("Server added. Please restart the bot to load it");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
-                message.Channel.SendMessageAsync("An error occured, check if your url is valid");
-                return;
+                //Server probably returned a broken steamid
+                try
+                {
+                    A2S_InfoResponse info = A2S.GetInfoWithoutSteamID(Content.Split(' ')[1]);
+                    DataBase.CreateServer(info);
+                    message.Channel.SendMessageAsync("Server added without steamid(can not be used for scanning right now due to corrupted data on server side). Please restart the bot to load it");
+                }
+                catch (Exception ex2)
+                {
+                    Console.WriteLine(ex2);
+                    message.Channel.SendMessageAsync("An error occured:" + ex2.Message);
+                    return;
+                }
             }
         }
     }
