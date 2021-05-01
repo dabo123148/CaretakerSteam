@@ -18,15 +18,16 @@ The first time you start the bot, it will ask for 2 things:
 1. Your api key for discord -> needed so the bot can start
 2. Your discord user id(this is a number not e.g. example#3049, it is something like 265119060331282241) -> this gives you access to certain commands to setup and manage the bot
 
-Once you have done this, you gonna need to add a server list:
-
+Once you have done this, you gonna need to add a server list:   
 Please inform yourself over the laws in your country, you might need to take care of certain data protection laws when processing and collecting data(especially gdpr)
-1. Option:
-!addserverlist [url]
-This url must be in the same formot as http://arkdedicated.com/officialservers.ini .
-2. Option:
-!createserver IP:Port
+1. Option:  
+!addserverlist [url]  
+This url must be in the same format as http://arkdedicated.com/officialservers.ini .
+
+2. Option:  
+!createserver IP:Port   
 This adds only 1 server
+
 Once the commands finished running you need to restart the bot one time, this causes it to load the servers
 
 Once this is done, your bot should be ready to go
