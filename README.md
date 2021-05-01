@@ -1,5 +1,5 @@
 # CaretakerSteam
-SteamID module of the discord bot Caretaker by dabo1#5039 
+Support: 
 https://discord.gg/zas9CkW
 
 What is this?
