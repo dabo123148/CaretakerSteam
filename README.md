@@ -8,6 +8,8 @@ If you know how to code:
 If you know how to code, I strongly advise you to rewrite the class DataBase.cs . There is an example datastrucure, but since it uses the winodows file system it isn't the fastest and might cause other issues. Also there is in Constants.cs a way to implement a debugging dashboard.
 
 Setup:
+Make sure the steam desktop client is running and logged into steam friends
+
 The first time you start the bot, it will ask for 2 things:
 -Your api key for discord -> needed so the bot can start
 -Your discord user id(this is a number not e.g. example#3049, it is something like 265119060331282241) -> this gives you access to certain commands to setup and manage the bot
