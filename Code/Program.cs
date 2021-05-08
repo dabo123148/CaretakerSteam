@@ -288,6 +288,10 @@ namespace Caretaker
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     SteamIDExportCommand(message, guildid, Content);
                     break;
+                case "!serverimport":
+                    Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
+                    ServerImportCommand(message, guildid, Content);
+                    break;
                 case "!devhelp":
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     DevHelpCommand(message, guildid, Content);
@@ -1589,6 +1593,147 @@ namespace Caretaker
                     message.Channel.SendMessageAsync("No tribes have been created yet. Use \"!createtribe\" first");
                     return;
                 }
+            }
+        }
+        private void ServerImportCommand(SocketMessage message, ulong guildid, string Content)
+        {
+            IGuildUser user = message.Author as IGuildUser;
+            if (user.GuildPermissions.ManageGuild == false)
+            {
+                message.Channel.SendMessageAsync("This is sensible data, due to that the command has limited access. You need the permission to manage the server in order to use this command.");
+                return;
+            }
+            if (message.Attachments.Count != 1 || message.Attachments.First().Filename.Split('.').Length != 2 || message.Attachments.First().Filename.Split('.')[1] != "csv")
+            {
+                message.Channel.SendMessageAsync("You need to attach a file gained by using !serverexport.");
+                return;
+            }
+            WebClient wclient = new WebClient();
+            string file = wclient.DownloadString(message.Attachments.First().Url);
+            string[] steamdata = file.Split('\n');
+            int succes = 0;
+            int failed = 0;
+            string Log = "";
+            for (int a = 1; a < steamdata.Length; a++)
+            {
+                string line = "";
+                if (steamdata[a].Split(';').Length >= 5)
+                {
+                    string[] elements = steamdata[a].Split(';');
+                    for (int b = 2; b < elements.Length; b++)
+                    {
+                        elements[b] = Compfort.RemoveChars(elements[b], Constants.InvalidTribenameCharacters);
+                    }
+                    elements[0] = Compfort.RemoveChars(elements[0], "\"");
+                    elements[1] = Compfort.RemoveChars(elements[1], "\"");
+                    List <ServerData> servers = steamIDControll.FindServer(elements[0],"");
+                    if(servers.Count == 1)
+                    {
+                        if (servers.First().IP.CompareTo(elements[1]) == 0)
+                        {
+                            List<TribeData> knowntribes = DataBase.GetTribes(guildid);
+                            TribeData found = null;
+                            foreach (TribeData tribe in knowntribes)
+                            {
+                                if (tribe.name.ToLower().CompareTo(elements[3].ToLower()) == 0)
+                                {
+                                    found = tribe;
+                                }
+                            }
+                            if (found == null)
+                            {
+                                //Create tribe
+                                Relationship relation = Compfort.ExtractRelationship(elements[4]);
+                                if(relation.CompareTo(Relationship.unknown)!=0 && relation.CompareTo(Relationship.invalid) != 0)
+                                {
+                                    found = DataBase.CreateTribe(guildid, elements[3], relation);
+                                    line = "```css\nCreated Tribe \"" + elements[3] + "\" with relation " + relation + "```";
+                                }
+                                else
+                                {
+                                    failed++;
+                                    line = "```css\n" + elements[3] + " had a invalid relation, could not create tribe```";
+                                }
+                            }
+                            List<TribeData> tribesonserver = DataBase.GetTribes(guildid, servers.First());
+                            bool alreadyadded = false;
+                            foreach(TribeData t in tribesonserver)
+                            {
+                                if (t.ID == found.ID) alreadyadded = true;
+                            }
+                            if (alreadyadded == false)
+                            {
+                                succes++;
+                                DataBase.AddTribeToServer(guildid, servers.First(), found);
+                            }
+                            else
+                            {
+                                failed++;
+                                line = "```css\n"+elements[0] + " had already tribe " + found.name + " added. Ignoring it```";
+                            }
+                        }
+                        else
+                        {
+                            failed++;
+                            line = "```css\nIP of " + elements[0] + " not matching saved ip:(" + elements[1] + " expected " + servers.First().IP+ "). Ignoring server```";
+                        }
+                    }
+                    else
+                    {
+                        failed++;
+                        line = "```css\nUnable to identify server " + elements[0] + " (found: " + servers.Count + " server). Ignored it```";
+                    }
+                }
+                else
+                {
+                    failed++;
+                    line = "```css\nFailed loading of line " + (a + 1) + " due to invalid parameter count```";
+                }
+                if (Log.Length + line.Length > 2000)
+                {
+                    message.Channel.SendMessageAsync(Log);
+                    Log = "";
+                }
+                Log += line;
+            }
+            if (Log.Length > 1)
+            {
+                message.Channel.SendMessageAsync(Log);
+            }
+            message.Channel.SendMessageAsync("Imported: " + succes + "lines\nFailed: " + failed + "lines");
+        }
+        private void ServerExortCommand(SocketMessage message, ulong guildid, string Content)
+        {
+            IGuildUser user = message.Author as IGuildUser;
+            if (user.GuildPermissions.ManageGuild == false)
+            {
+                message.Channel.SendMessageAsync("This is sensible data, due to that the command has limited access. You need the permission to manage the server in order to use this command.");
+                return;
+            }
+            if (Content.Split(' ').Length != 1)
+            {
+                message.Channel.SendMessageAsync("Command needs to be !serverexport");
+                return;
+            }
+            string data = "\"Server\";\"IP\";\"TribeID\";\"Tribename\";\"Triberelation\"";
+            foreach (ServerData server in steamIDControll.servers)
+            {
+                List<TribeData> knowntribes = DataBase.GetTribes(guildid, server);
+                foreach (TribeData tribe in knowntribes)
+                {
+                    data += "\n\"" + server.Name + "\";\"" + server.IP + "\";\"" + tribe.ID + "\";\"" + tribe.name + "\";\"" + tribe.relation + "\"";
+                }
+            }
+            if (data.Length > 50)
+            {
+                File.WriteAllText(AppContext.BaseDirectory + "\\Export.csv", data);
+                message.Channel.SendFileAsync(AppContext.BaseDirectory + "\\Export.csv", "Data export of all servers");
+                return;
+            }
+            else
+            {
+                message.Channel.SendMessageAsync("No tribe has been added yet to a server");
+                return;
             }
         }
         private void MarkBotCommand(SocketMessage message, ulong guildid, string Content)

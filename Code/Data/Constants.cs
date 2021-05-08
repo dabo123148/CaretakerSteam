@@ -33,7 +33,7 @@ namespace Caretaker
         /// <summary>
         /// Depends mostly on your database, if your database can't handle it, then you should ignore them(probably better to use a permitted character list, but well whatever)
         /// </summary>
-        public static readonly string InvalidTribenameCharacters = ";&\\/:.|!?%$§\"()[]=}{^°@€+~*#'<>-_";
+        public static readonly string InvalidTribenameCharacters = ";\\/:|!?%$§\"()[]=}{^°@€+~*#'<>-_";
         /// <summary>
         /// Limit of alerts a server can make
         /// </summary>
