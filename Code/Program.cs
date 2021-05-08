@@ -292,6 +292,10 @@ namespace Caretaker
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     ServerImportCommand(message, guildid, Content);
                     break;
+                case "!serverexport":
+                    Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
+                    ServerExortCommand(message, guildid, Content);
+                    break;
                 case "!devhelp":
                     Compfort.Log("Command in " + guildchannel.Guild.Name + " (" + guildchannel.Guild.Id + ") by " + message.Author + "(" + message.Author.Id + "):" + message.Content, LogType.Command);
                     DevHelpCommand(message, guildid, Content);
@@ -478,6 +482,8 @@ namespace Caretaker
             helpmessage += "Sets the format in which alert messages are beeing presented ```css\n!setalertoutput [short,detailed]```";
             helpmessage += "Exports all manually added ids, that match the filter. Can be importet by other bots```css\n!steamidexport [Tribename or all]```";
             helpmessage += "Imports all manually added ids```css\n!steamidimport (export file as attachment)```";
+            helpmessage += "Imports a server list```css\n!serverimport (export file as attachment)```";
+            helpmessage += "Exports a server list```css\n!serverexport```";
             helpmessage += "Activates/Deactivates leavemessages```css\n!toggleleavelog```";
             if (message.Author.Id == AuthorUserID) helpmessage += "List of commands only you can execute(dev commands)```css\n!devhelp```";
             helpmessage += "Open Source Github implementation from: " + Constants.githuburl + "\n";
