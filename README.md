@@ -9,6 +9,7 @@ This is a discord bot, that allows you to monitor player joins and leaves on ser
 If you know how to code:
 
 If you know how to code, I strongly advise you to rewrite the class DataBase.cs . There is an example datastrucure, but since it uses the winodows file system it isn't the fastest and might cause other issues. Also there is in Constants.cs a way to implement a debugging dashboard.
+You will also need to include a version of steam_api64.dll + steam_appid.txt to your build folder(can be found in release) in order for it to run properly(this is required for the scan function and getting steam names based on their steamid.
 
 Setup:
 
